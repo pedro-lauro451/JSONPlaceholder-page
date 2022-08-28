@@ -1,12 +1,22 @@
 const user = document.getElementById("user");
 const getUser = document.getElementById("get-user");
+const getPosts = document.getElementById("view-posts");
+const getAlbums = document.getElementById("view-albums");
+const getTodos = document.getElementById("view-todos");
+const displayPosts = document.getElementById("posts");
 
 var userInfo =
 {   
     username: document.getElementById("username"),
     email: document.getElementById("email"),
-    name: document.getElementById("name")
+    name: document.getElementById("name"),
+    id: document.getElementById("userId"),
 };
+
+var userPostsTitle = [];
+var userPostsBody = [];
+
+var userId = "";
 
 getUser.onclick = function()
 {
@@ -31,8 +41,68 @@ getUser.onclick = function()
         email = email.replaceAll('"', '');
         var parsedEmail = email.split(":")[1];
 
+        var id = parsed[0];
+        id = id.replaceAll('"', '');
+        var parsedId = id.split(":")[1];
+        userId = parsedId;
+        console.log(userId);
+
         userInfo.username.innerHTML = "Username: " + parsedUsername;
         userInfo.email.innerHTML = "Email: " + parsedEmail;
         userInfo.name.innerHTML = parsedName;
+        userInfo.id.innerHTML = parsedId;
+    });
+}
+
+getPosts.onclick = function()
+{
+    var post = '';
+    var title = '';
+    userPostsTitle = [];
+    fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/posts")
+    .then(response => {
+        return response.json();
     })
+    .then(posts => {
+        length = posts.length;
+        for(var i = 0; i < length; i++)
+        {
+            post = JSON.stringify(posts[i]);
+            title = post.split(",")[2];
+            title = title.split(":")[1];
+            title = title.replaceAll('"', '');
+
+            body = post.split(",")[3];
+            body = body.split(":")[1];
+            body = body.replaceAll('"', '');
+            body = body.replaceAll('}', '');
+
+            userPostsTitle.push("<span style='font-size:20px'>" + title + "</span>" + "<br>" + body + "<br><br>");
+        }
+        userPostsTitle.forEach(post => displayPosts.innerHTML += "<br>" + Object.values(post).join(""));
+    });
+}
+
+getAlbums.onclick = function()
+{
+    fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/albums")
+    .then(response => {
+        return response.json();
+    })
+    .then(posts => {
+        var unparsed = JSON.stringify(posts);
+        console.log(unparsed);
+    });
+}
+
+getTodos.onclick = function()
+{
+    fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/todos")
+    .then(response => {
+        return response.json();
+    })
+    .then(posts => {
+        var unparsed = JSON.stringify(posts);
+        console.log(unparsed);
+    });
 }
