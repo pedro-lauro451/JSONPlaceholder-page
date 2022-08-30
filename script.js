@@ -13,13 +13,15 @@ var userInfo =
     id: document.getElementById("userId"),
 };
 
-var userPostsTitle = [];
-var userPostsBody = [];
+var userPosts = [];
+var userAlbums = [];
+var userTodos = [];
 
 var userId = "";
 
 getUser.onclick = function()
 {
+    userPosts = [];
     fetch('https://jsonplaceholder.typicode.com/users/?name=' + user.value.toString())
     .then(response => {
         return response.json();
@@ -58,7 +60,7 @@ getPosts.onclick = function()
 {
     var post = '';
     var title = '';
-    userPostsTitle = [];
+    userPosts = [];
     fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/posts")
     .then(response => {
         return response.json();
@@ -77,32 +79,32 @@ getPosts.onclick = function()
             body = body.replaceAll('"', '');
             body = body.replaceAll('}', '');
 
-            userPostsTitle.push("<span style='font-size:20px'>" + title + "</span>" + "<br>" + body + "<br><br>");
+            userPosts.push("<span style='font-size:20px'>" + title + "</span>" + "<br>" + body + "<br><br>");
         }
-        userPostsTitle.forEach(post => displayPosts.innerHTML += "<br>" + Object.values(post).join(""));
+        userPosts.forEach(post => displayPosts.innerHTML += "<br>" + Object.values(post).join(""));
     });
 }
 
 getAlbums.onclick = function()
 {
+    var userAlbums = [];
     fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/albums")
     .then(response => {
         return response.json();
     })
     .then(posts => {
         var unparsed = JSON.stringify(posts);
-        console.log(unparsed);
     });
 }
 
 getTodos.onclick = function()
 {
+    var userTodos = [];
     fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/todos")
     .then(response => {
         return response.json();
     })
     .then(posts => {
         var unparsed = JSON.stringify(posts);
-        console.log(unparsed);
     });
 }
