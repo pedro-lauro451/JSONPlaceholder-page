@@ -1,9 +1,18 @@
+//Data
 const user = document.getElementById("user");
 const getUser = document.getElementById("get-user");
 const getPosts = document.getElementById("view-posts");
 const getAlbums = document.getElementById("view-albums");
 const getTodos = document.getElementById("view-todos");
 const displayPosts = document.getElementById("posts");
+const displayAlbums = document.getElementById("albums");
+const displayTodos = document.getElementById("todos");
+
+//Display
+const toggleUserInfo = document.querySelectorAll('.display');
+const togglePostInfo = document.querySelectorAll('.posts');
+const toggleAlbumInfo = document.querySelectorAll('.albums');
+const toggleTodoInfo = document.querySelectorAll('.todos');
 
 var userInfo =
 {   
@@ -13,15 +22,109 @@ var userInfo =
     id: document.getElementById("userId"),
 };
 
+var albumInfo =
+{
+    userId: document.getElementById("userId"),
+    albumTitle: document.getElementById("albumTitle"),
+};
+
+var todoInfo =
+{
+    userId: document.getElementById("userId"),
+    title: document.getElementById("todoTitle"),
+    completed: document.getElementById("todoCompleted"),
+};
+
 var userPosts = [];
 var userAlbums = [];
 var userTodos = [];
 
 var userId = "";
 
+var UserIsDisplayed = false;
+var PostIsDisplayed = false;
+var AlbumIsDisplayed = false;
+var TodoIsDisplayed = false;
+
+function displayUserInfo()
+{
+    if(UserIsDisplayed === false)
+    {
+        toggleUserInfo.forEach(content => {
+            content.style.display = 'initial';
+        });
+        UserIsDisplayed = true;
+    }
+
+    // else if(UserIsDisplayed === true)
+    // {
+    //     toggleUserInfo.forEach(content => {
+    //         content.style.display = 'none';
+    //     });
+    //     UserIsDisplayed = false;
+    // }
+};
+
+function displayPostInfo()
+{
+    if(PostIsDisplayed === false)
+    {
+        togglePostInfo.forEach(content => {
+            content.style.display = 'initial';
+        });
+        PostIsDisplayed = true;
+    }
+    else if(PostIsDisplayed === true)
+    {
+        togglePostInfo.forEach(content => {
+            content.style.display = 'none';
+        });
+        PostIsDisplayed = false;
+    }
+        
+}
+
+function displayAlbumInfo()
+{
+    if(AlbumIsDisplayed === false)
+    {
+        toggleAlbumInfo.forEach(content => {
+            content.style.display = 'initial';
+        });
+        AlbumIsDisplayed = true;
+    }
+    else if(AlbumIsDisplayed === true)
+    {
+        toggleAlbumInfo.forEach(content => {
+            content.style.display = 'none';
+        });
+        AlbumIsDisplayed = false;
+    }
+}
+
+function displayTodoInfo()
+{
+    if(TodoIsDisplayed === false)
+    {
+        toggleTodoInfo.forEach(content => {
+            content.style.display = 'initial';
+        });
+        TodoIsDisplayed = true;
+    }
+    else if(TodoIsDisplayed === true)
+    {
+        toggleTodoInfo.forEach(content => {
+            content.style.display = 'none';
+        });
+        TodoIsDisplayed = false;
+    }
+}
+
 getUser.onclick = function()
 {
+    displayUserInfo();
     userPosts = [];
+
     fetch('https://jsonplaceholder.typicode.com/users/?name=' + user.value.toString())
     .then(response => {
         return response.json();
@@ -47,20 +150,25 @@ getUser.onclick = function()
         id = id.replaceAll('"', '');
         var parsedId = id.split(":")[1];
         userId = parsedId;
-        console.log(userId);
+        //console.log(userId);
 
         userInfo.username.innerHTML = "Username: " + parsedUsername;
         userInfo.email.innerHTML = "Email: " + parsedEmail;
         userInfo.name.innerHTML = parsedName;
         userInfo.id.innerHTML = parsedId;
     });
-}
+};
 
 getPosts.onclick = function()
 {
+    displayPostInfo();
+
     var post = '';
     var title = '';
+
     userPosts = [];
+    displayPosts.innerHTML = "";
+
     fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/posts")
     .then(response => {
         return response.json();
@@ -79,32 +187,74 @@ getPosts.onclick = function()
             body = body.replaceAll('"', '');
             body = body.replaceAll('}', '');
 
-            userPosts.push("<span style='font-size:20px'>" + title + "</span>" + "<br>" + body + "<br><br>");
+            //userPosts.push("<span style='font-size:20px'>" + title + "</span>" + "<br>" + body + "<br><br>");
+            userPosts.push("<p class='title'>" + title + "</p>" + "<div'><p>" + body + "</div></p>");
         }
         userPosts.forEach(post => displayPosts.innerHTML += "<br>" + Object.values(post).join(""));
     });
-}
+};
 
 getAlbums.onclick = function()
 {
-    var userAlbums = [];
+    displayAlbumInfo();
+
+    var unparsedAlbum = '';
+    var album = '';
+
+    userAlbums = [];
+    displayAlbums.innerHTML = "";
+
     fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/albums")
     .then(response => {
         return response.json();
     })
-    .then(posts => {
-        var unparsed = JSON.stringify(posts);
+    .then(albums => {
+       length = albums.length;
+       for(var i = 0; i < length; i++)
+       {
+            unparsedAlbum = JSON.stringify(albums[i]);
+            album = unparsedAlbum.split(",")[2];
+            album = album.split(":")[1];
+            album = album.replaceAll('"', '');
+            album = album.replaceAll('}', '');
+
+            userAlbums.push("<p class='title'>" + album + "</p>");
+       }
+       userAlbums.forEach(album => displayAlbums.innerHTML += "<br>" + Object.values(album).join(""));
     });
-}
+};
 
 getTodos.onclick = function()
 {
-    var userTodos = [];
+    displayTodoInfo();
+    var unparsedTodo = '';
+    var todoTitle = '';
+    var completed = '';
+
+    userTodos = [];
+    displayTodos.innerHTML = "";
+
     fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/todos")
     .then(response => {
         return response.json();
     })
-    .then(posts => {
-        var unparsed = JSON.stringify(posts);
+    .then(todos => {
+        length = todos.length;
+        for(var i = 0; i < length; i++)
+        {
+            unparsedTodo = JSON.stringify(todos[i]);
+            todoTitle = unparsedTodo.split(",")[2];
+            todoTitle = todoTitle.split(":")[1];
+            todoTitle = todoTitle.replaceAll('"', '');
+            todoTitle = todoTitle.replaceAll('}', '');
+
+            completed = unparsedTodo.split(",")[3];
+            completed = completed.split(":")[1];
+            completed = completed.replaceAll('"', '');
+            completed = completed.replaceAll('}', '');
+
+            userTodos.push("<p class='title'>" + todoTitle + "</p>" + "<div><p>" + completed + "</div></p>");
+        }
+        userTodos.forEach(todo => displayTodos.innerHTML += "<br>" + Object.values(todo).join(""));
     });
-}
+};
