@@ -7,6 +7,7 @@ const getTodos = document.getElementById("view-todos");
 const displayPosts = document.getElementById("posts");
 const displayAlbums = document.getElementById("albums");
 const displayTodos = document.getElementById("todos");
+const closeIcon = document.getElementById("close");
 
 //Display
 const toggleUserInfo = document.querySelectorAll('.display');
@@ -20,6 +21,11 @@ var userInfo =
     email: document.getElementById("email"),
     name: document.getElementById("name"),
     id: document.getElementById("userId"),
+};
+
+var postInfo =
+{
+    userId: document.getElementById("userId"),
 };
 
 var albumInfo =
@@ -55,14 +61,13 @@ function displayUserInfo()
         });
         UserIsDisplayed = true;
     }
-
-    // else if(UserIsDisplayed === true)
-    // {
-    //     toggleUserInfo.forEach(content => {
-    //         content.style.display = 'none';
-    //     });
-    //     UserIsDisplayed = false;
-    // }
+    else if(UserIsDisplayed === true)
+    {
+        toggleUserInfo.forEach(content => {
+            content.style.display = 'none';
+        });
+        UserIsDisplayed = false;
+    }
 };
 
 function displayPostInfo()
@@ -73,6 +78,7 @@ function displayPostInfo()
             content.style.display = 'initial';
         });
         PostIsDisplayed = true;
+        getPosts.innerHTML = "Close Posts";
     }
     else if(PostIsDisplayed === true)
     {
@@ -80,9 +86,10 @@ function displayPostInfo()
             content.style.display = 'none';
         });
         PostIsDisplayed = false;
+        getPosts.innerHTML = "View Posts";
     }
         
-}
+};
 
 function displayAlbumInfo()
 {
@@ -92,6 +99,7 @@ function displayAlbumInfo()
             content.style.display = 'initial';
         });
         AlbumIsDisplayed = true;
+        getAlbums.innerHTML = "Close Albums";
     }
     else if(AlbumIsDisplayed === true)
     {
@@ -99,8 +107,9 @@ function displayAlbumInfo()
             content.style.display = 'none';
         });
         AlbumIsDisplayed = false;
+        getAlbums.innerHTML = "View Albums";
     }
-}
+};
 
 function displayTodoInfo()
 {
@@ -110,6 +119,7 @@ function displayTodoInfo()
             content.style.display = 'initial';
         });
         TodoIsDisplayed = true;
+        getTodos.innerHTML = "Close Todos";
     }
     else if(TodoIsDisplayed === true)
     {
@@ -117,13 +127,61 @@ function displayTodoInfo()
             content.style.display = 'none';
         });
         TodoIsDisplayed = false;
+        getTodos.innerHTML = "View Todos";
     }
-}
+};
+
+
+function hideAll()
+{
+    if(PostIsDisplayed === true)
+    {
+        togglePostInfo.forEach(content => {
+            content.style.display = 'none';
+        });
+        PostIsDisplayed = false;
+    }
+
+    if(AlbumIsDisplayed === true)
+    {
+        toggleAlbumInfo.forEach(content => {
+            content.style.display = 'none';
+        });
+        AlbumIsDisplayed = false;
+    }
+
+    if(TodoIsDisplayed === true)
+    {
+        toggleTodoInfo.forEach(content => {
+            content.style.display = 'none';
+        });
+        TodoIsDisplayed = false;
+    }
+
+    userPosts = [];
+    displayPosts.innerHTML = "";
+    getPosts.innerHTML = "View Posts";
+
+    userAlbums = [];
+    displayAlbums.innerHTML = "";
+    getAlbums.innerHTML = "View Albums";
+
+    userTodos = [];
+    displayTodos.innerHTML = "";
+    getTodos.innerHTML = "View Todos";
+};
+
+closeIcon.onclick = function()
+{
+    displayUserInfo();
+    hideAll();
+};
+
 
 getUser.onclick = function()
 {
     displayUserInfo();
-    userPosts = [];
+    hideAll();
 
     fetch('https://jsonplaceholder.typicode.com/users/?name=' + user.value.toString())
     .then(response => {
@@ -150,7 +208,6 @@ getUser.onclick = function()
         id = id.replaceAll('"', '');
         var parsedId = id.split(":")[1];
         userId = parsedId;
-        //console.log(userId);
 
         userInfo.username.innerHTML = "Username: " + parsedUsername;
         userInfo.email.innerHTML = "Email: " + parsedEmail;
@@ -187,7 +244,6 @@ getPosts.onclick = function()
             body = body.replaceAll('"', '');
             body = body.replaceAll('}', '');
 
-            //userPosts.push("<span style='font-size:20px'>" + title + "</span>" + "<br>" + body + "<br><br>");
             userPosts.push("<p class='title'>" + title + "</p>" + "<div'><p>" + body + "</div></p>");
         }
         userPosts.forEach(post => displayPosts.innerHTML += "<br>" + Object.values(post).join(""));

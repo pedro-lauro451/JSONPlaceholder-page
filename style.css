@@ -124,6 +124,19 @@ input
     display: none;
 }
 
+.displayHeader
+{
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-between;
+}
+
+.close:hover
+{
+    font-weight: bold;
+    cursor: pointer;
+}
+
 .posts
 {
     background-color: #1f2a48;
