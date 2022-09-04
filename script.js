@@ -1,6 +1,8 @@
 //Data
 const user = document.getElementById("user");
 const getUser = document.getElementById("get-user");
+const getAllUsers = document.getElementById("get-all-users");
+const listAllUsers = document.getElementById("list-all-users");
 const getPosts = document.getElementById("view-posts");
 const getAlbums = document.getElementById("view-albums");
 const getTodos = document.getElementById("view-todos");
@@ -8,6 +10,7 @@ const displayPosts = document.getElementById("posts");
 const displayAlbums = document.getElementById("albums");
 const displayTodos = document.getElementById("todos");
 const closeIcon = document.getElementById("close");
+var clickedUser = '';
 
 //Display
 const toggleUserInfo = document.querySelectorAll('.display');
@@ -23,24 +26,7 @@ var userInfo =
     id: document.getElementById("userId"),
 };
 
-var postInfo =
-{
-    userId: document.getElementById("userId"),
-};
-
-var albumInfo =
-{
-    userId: document.getElementById("userId"),
-    albumTitle: document.getElementById("albumTitle"),
-};
-
-var todoInfo =
-{
-    userId: document.getElementById("userId"),
-    title: document.getElementById("todoTitle"),
-    completed: document.getElementById("todoCompleted"),
-};
-
+var allUsers = [];
 var userPosts = [];
 var userAlbums = [];
 var userTodos = [];
@@ -51,6 +37,7 @@ var UserIsDisplayed = false;
 var PostIsDisplayed = false;
 var AlbumIsDisplayed = false;
 var TodoIsDisplayed = false;
+var toggleList = false;
 
 function displayUserInfo()
 {
@@ -177,13 +164,12 @@ closeIcon.onclick = function()
     hideAll();
 };
 
-
-getUser.onclick = function()
+function showUser(name)
 {
     displayUserInfo();
     hideAll();
 
-    fetch('https://jsonplaceholder.typicode.com/users/?name=' + user.value.toString())
+    fetch('https://jsonplaceholder.typicode.com/users/?name=' + name)
     .then(response => {
         return response.json();
     })
@@ -214,6 +200,53 @@ getUser.onclick = function()
         userInfo.name.innerHTML = parsedName;
         userInfo.id.innerHTML = parsedId;
     });
+};
+
+getUser.onclick = function()
+{
+    showUser(user.value.toString());
+};
+
+getAllUsers.onclick = function()
+{
+    if(toggleList === false)
+    {
+        allUsers = [];
+        listAllUsers.innerHTML = "";
+
+        var parsedUser = "";
+        fetch("https://jsonplaceholder.typicode.com/users")
+        .then(response => {
+            return response.json();
+        })
+        .then(users => {
+            length = users.length;
+            for(var i = 0; i < length; i++)
+            {
+                parsedUser = JSON.stringify(users[i]);
+                parsedUser = parsedUser.split(",")[1];
+                parsedUser = parsedUser.split(":")[1];
+                parsedUser = parsedUser.replaceAll('"', '');
+
+                allUsers.push("<p id='user" + i + "' onClick='replyClick(this.id)'>" + parsedUser + "</p>");
+            }
+            allUsers.forEach(user => listAllUsers.innerHTML += Object.values(user).join(""));
+        });
+        toggleList = true;
+    }    
+    else if(toggleList === true)
+    {
+        allUsers = [];
+        listAllUsers.innerHTML = "";
+        toggleList = false;
+    }
+};
+
+function replyClick(clicked_id)
+{
+    clickedUser = document.getElementById(clicked_id);
+    clickedUser = clickedUser.innerHTML;
+    showUser(clickedUser);
 };
 
 getPosts.onclick = function()

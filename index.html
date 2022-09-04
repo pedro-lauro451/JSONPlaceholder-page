@@ -18,32 +18,47 @@
                 <a href="about.html"><li class="menu-item">About</li></a>
             </ul>
     </div>
-    
 
-    <div class="container">
-        <div class="card">
-            <form>
-                <input type="text" id="user">
-                <p class="btn" id="get-user">Find User</p>
-            </form>
+    <div style="display: flex; justify-content:space-around;flex-wrap: wrap;">
+        <div class="">
+            <div class="list-card">
+                <div>
+                    <p id="get-all-users">List all Users</p>
+                </div>
+                <div id="list-all-users">
+                </div>
+            </div>
         </div>
+    
+        <div class="content">
+            <div class="card">
+                <form>
+                    <input type="text" id="user">
+                    <p class="btn" id="get-user">Find User</p>
+                </form>
+            </div>
+
+            <div class="display">
+                <div class="displayHeader">
+                    <p id="name" class="name" style="margin: 0; font-weight: bold;"></p>
+                    <p id="close" class="close" style="margin-top: 0;">X</p>
+                </div>
+                <p id="username"></p>
+                <p id="email"></p>
+                <p id="userId" style="display: none;"></p>
+                <div class="btn-view">
+                    <p class="btn1" id="view-posts">View Posts</p>
+                    <p class="btn2" id="view-albums">View Albums</p>
+                    <p class="btn3" id="view-todos">View Todos</p>
+                </div>
+            </div>
+        </div>
+    
     </div>
 
+    
     <div class="content">
-        <div class="display">
-            <div class="displayHeader">
-                <p id="name" class="name" style="margin: 0; font-weight: bold;"></p>
-                <p id="close" class="close" style="margin-top: 0;">X</p>
-            </div>
-            <p id="username"></p>
-            <p id="email"></p>
-            <p id="userId" style="display: none;"></p>
-            <div class="btn-view">
-                <p class="btn1" id="view-posts">View Posts</p>
-                <p class="btn2" id="view-albums">View Albums</p>
-                <p class="btn3" id="view-todos">View Todos</p>
-            </div>
-        </div>
+        
     </div>
     <div class="content">
         <div class="posts">

@@ -69,15 +69,16 @@ input
     display: flex;
     justify-content: center;
     align-items:center;
-    height: 200px;
+    height: 100px;
+    margin-top: 1rem;
 }
 
 .content
 {
     display: flex;
-    justify-content: center;
     align-items:center;
     margin-top: 1rem;
+    flex-direction: column;
 }
 
 .text-content
@@ -93,6 +94,28 @@ input
 .card form
 {
     display: flex;
+}
+
+.list-card
+{
+    background-color: #1f2a48;
+    border-radius: 10px;
+    margin-top:1rem;
+    max-width: 600px;
+    cursor: pointer;
+}
+
+.list-card p:hover
+{
+    background-color: #2c3a61;
+    border-radius: 10px;
+    padding: 0.4rem;
+}
+
+.list-card p
+{
+    text-align: center;
+    padding: 0.4rem;
 }
 
 .btn
@@ -157,6 +180,7 @@ input
     background-color: #1f2a48;
     border-radius: 5px;
     padding: 1rem 1rem 1rem 1rem; 
+    margin: 1rem;
     display: none;
 }
 
