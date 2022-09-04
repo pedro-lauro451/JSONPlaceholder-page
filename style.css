@@ -5,6 +5,18 @@ body
     color: white;
 }
 
+a
+{
+    color: white;
+    text-decoration: none;
+}
+
+a:hover
+{
+    font-weight: bold;
+    cursor: pointer;
+}
+
 .header
 {
     background-color: #1f2a48;
@@ -13,6 +25,8 @@ body
     display: flex;
     align-items: center;
     color: white;
+    flex-direction: row;
+    justify-content:space-between;
 }
 
 ul
@@ -24,6 +38,18 @@ ul
 li
 {
     font-size: 20px;
+    margin-right: 30px;
+}
+
+li:hover
+{
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.menu-item
+{
+    font-size: 16px;
 }
 
 input
@@ -52,6 +78,16 @@ input
     justify-content: center;
     align-items:center;
     margin-top: 1rem;
+}
+
+.text-content
+{
+    display: flex;
+    flex-direction: column;
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
+    max-width: 600px;
+    line-height: 1.5;
 }
 
 .card form
