@@ -106,6 +106,15 @@ closeIcon.onclick = function()
     hideAll();
 };
 
+function parseUserInfoJson(JsonString, firstSplit, secondSplit)
+{
+    JsonString = JsonString[firstSplit];
+    JsonString = JsonString.replaceAll('"', '');
+    JsonString = JsonString.split(":")[secondSplit];
+
+    return JsonString;
+};
+
 function showUser(name)
 {
     UserIsDisplayed = displayInfo(UserIsDisplayed,toggleUserInfo);
@@ -121,34 +130,34 @@ function showUser(name)
         var unparsed = JSON.stringify(user);
         var parsed = unparsed.split(",");
 
-        var name = parsed[1];
-        name = name.replaceAll('"', '');
-        var parsedName = name.split(":")[1];
-
-        var username = parsed[2];
-        username = username.replaceAll('"', '');
-        var parsedUsername = username.split(":")[1];
-        
-        var email = parsed[3];
-        email = email.replaceAll('"', '');
-        var parsedEmail = email.split(":")[1];
-
-        var id = parsed[0];
-        id = id.replaceAll('"', '');
-        var parsedId = id.split(":")[1];
-        userId = parsedId;
+        var name = parseUserInfoJson(parsed, 1, 1);
+        var username = parseUserInfoJson(parsed, 2, 1);
+        var email = parseUserInfoJson(parsed, 3, 1);
+        var id = parseUserInfoJson(parsed, 0, 1);
+        userId = id;
 
         //Sets User Info to be displayed 
-        userInfo.username.innerHTML = "Username: " + parsedUsername;
-        userInfo.email.innerHTML = "Email: " + parsedEmail;
-        userInfo.name.innerHTML = parsedName;
-        userInfo.id.innerHTML = parsedId;
+        userInfo.username.innerHTML = "Username: " + username;
+        userInfo.email.innerHTML = "Email: " + email;
+        userInfo.name.innerHTML = name;
+        userInfo.id.innerHTML = id;
     });
 };
 
 getUser.onclick = function() //Calls showUser method using input value as parameter
 {
     showUser(user.value.toString());
+};
+
+function formatJson(JsonString, firstSplit, secondSplit)
+{
+    JsonString = JsonString.split(",")[firstSplit];
+    JsonString = JsonString.split(":")[secondSplit];
+    JsonString = JsonString.replaceAll('"', '');
+    JsonString = JsonString.replaceAll('}', '');
+    JsonString = JsonString.replaceAll('{', '');
+
+    return JsonString;
 };
 
 getAllUsers.onclick = function()
@@ -169,9 +178,8 @@ getAllUsers.onclick = function()
             for(var i = 0; i < length; i++)
             {
                 parsedUser = JSON.stringify(users[i]);
-                parsedUser = parsedUser.split(",")[1];
-                parsedUser = parsedUser.split(":")[1];
-                parsedUser = parsedUser.replaceAll('"', '');
+
+                parsedUser = formatJson(parsedUser, 1, 1);
 
                  //Adds an unique id for each User in the User List, to be used by the replyClick method
                  //when you click the User
@@ -196,6 +204,8 @@ function replyClick(clicked_id) //Calls showUser method using ids generated for 
     showUser(clickedUser);
 };
 
+//Shows Posts, Albums and Todos
+
 getPosts.onclick = function()
 {
     PostIsDisplayed = displayInfo(PostIsDisplayed,togglePostInfo);
@@ -216,15 +226,10 @@ getPosts.onclick = function()
         for(var i = 0; i < length; i++)
         {
             post = JSON.stringify(posts[i]);
-            title = post.split(",")[2];
-            title = title.split(":")[1];
-            title = title.replaceAll('"', '');
 
-            body = post.split(",")[3];
-            body = body.split(":")[1];
-            body = body.replaceAll('"', '');
-            body = body.replaceAll('}', '');
-
+            title = formatJson(post, 2, 1);
+            body = formatJson(post, 3, 1);
+            
             userPosts.push("<p class='title'>" + title + "</p>" + "<div'><p>" + body + "</div></p>");
         }
         userPosts.forEach(post => displayPosts.innerHTML += "<br>" + Object.values(post).join(""));
@@ -235,7 +240,6 @@ getAlbums.onclick = function()
 {
     AlbumIsDisplayed = displayInfo(AlbumIsDisplayed,toggleAlbumInfo);
 
-    var unparsedAlbum = '';
     var album = '';
 
     //Empties array and div
@@ -250,11 +254,9 @@ getAlbums.onclick = function()
        length = albums.length;
        for(var i = 0; i < length; i++)
        {
-            unparsedAlbum = JSON.stringify(albums[i]);
-            album = unparsedAlbum.split(",")[2];
-            album = album.split(":")[1];
-            album = album.replaceAll('"', '');
-            album = album.replaceAll('}', '');
+            album = JSON.stringify(albums[i]);
+
+            album = formatJson(album, 2, 1);
 
             userAlbums.push("<p class='title'>" + album + "</p>");
        }
@@ -282,15 +284,9 @@ getTodos.onclick = function()
         for(var i = 0; i < length; i++)
         {
             unparsedTodo = JSON.stringify(todos[i]);
-            todoTitle = unparsedTodo.split(",")[2];
-            todoTitle = todoTitle.split(":")[1];
-            todoTitle = todoTitle.replaceAll('"', '');
-            todoTitle = todoTitle.replaceAll('}', '');
 
-            completed = unparsedTodo.split(",")[3];
-            completed = completed.split(":")[1];
-            completed = completed.replaceAll('"', '');
-            completed = completed.replaceAll('}', '');
+            todoTitle = formatJson(unparsedTodo, 2, 1);
+            completed = formatJson(unparsedTodo, 3, 1);
 
             userTodos.push("<p class='title'>" + todoTitle + "</p>" + "<div><p>" + completed + "</div></p>");
         }
