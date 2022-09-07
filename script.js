@@ -1,23 +1,26 @@
-//Data
-const user = document.getElementById("user");
-const getUser = document.getElementById("get-user");
-const getAllUsers = document.getElementById("get-all-users");
-const listAllUsers = document.getElementById("list-all-users");
-const getPosts = document.getElementById("view-posts");
-const getAlbums = document.getElementById("view-albums");
-const getTodos = document.getElementById("view-todos");
-const displayPosts = document.getElementById("posts");
-const displayAlbums = document.getElementById("albums");
-const displayTodos = document.getElementById("todos");
-const closeIcon = document.getElementById("close");
-var clickedUser = '';
+const user = document.getElementById("user");                   //Find User input
+const getUser = document.getElementById("get-user");            //Find User button
+const getAllUsers = document.getElementById("get-all-users");   //Displays User List when clicked
+const listAllUsers = document.getElementById("list-all-users"); //User List is displayed in the corresponding div
 
-//Display
-const toggleUserInfo = document.querySelectorAll('.display');
-const togglePostInfo = document.querySelectorAll('.posts');
-const toggleAlbumInfo = document.querySelectorAll('.albums');
-const toggleTodoInfo = document.querySelectorAll('.todos');
+const getPosts = document.getElementById("view-posts");         //View Posts button 
+const getAlbums = document.getElementById("view-albums");       //View Albums button
+const getTodos = document.getElementById("view-todos");         //View Todos button
+const closeIcon = document.getElementById("close");             //Close User Info button
 
+const displayPosts = document.getElementById("posts");          //Posts are displayed in this div
+const displayAlbums = document.getElementById("albums");        //Albums are displayed in this div
+const displayTodos = document.getElementById("todos");          //Todos are displayed in this div
+
+var clickedUser = '';                                           //Receives the selected User in the User List (replyClick method)
+
+const toggleUserInfo = document.querySelectorAll('.display');   //User card class
+
+const togglePostInfo = document.querySelectorAll('.posts');     //Posts list class 
+const toggleAlbumInfo = document.querySelectorAll('.albums');   //Albums list class
+const toggleTodoInfo = document.querySelectorAll('.todos');     //Todos list class
+
+//User object
 var userInfo =
 {   
     username: document.getElementById("username"),
@@ -26,98 +29,39 @@ var userInfo =
     id: document.getElementById("userId"),
 };
 
-var allUsers = [];
-var userPosts = [];
-var userAlbums = [];
-var userTodos = [];
+var allUsers = [];      //This array will contain the User List in the getAllUsers onclick
+var userPosts = [];     //Contains User Posts
+var userAlbums = [];    //Contains User Albums
+var userTodos = [];     //Contains User Todos
 
 var userId = "";
 
+//Booleans used in display toggle methods
 var UserIsDisplayed = false;
 var PostIsDisplayed = false;
 var AlbumIsDisplayed = false;
 var TodoIsDisplayed = false;
 var toggleList = false;
 
-function displayUserInfo()
+function displayInfo(boolValue,toggleValue)
 {
-    if(UserIsDisplayed === false)
+    if(boolValue == false)
     {
-        toggleUserInfo.forEach(content => {
+        toggleValue.forEach(content => {
             content.style.display = 'initial';
         });
-        UserIsDisplayed = true;
+        boolValue = true;
+        return boolValue;
     }
-    else if(UserIsDisplayed === true)
+    else if(boolValue == true)
     {
-        toggleUserInfo.forEach(content => {
+        toggleValue.forEach(content => {
             content.style.display = 'none';
         });
-        UserIsDisplayed = false;
+        boolValue = false;
+        return boolValue;
     }
 };
-
-function displayPostInfo()
-{
-    if(PostIsDisplayed === false)
-    {
-        togglePostInfo.forEach(content => {
-            content.style.display = 'initial';
-        });
-        PostIsDisplayed = true;
-        getPosts.innerHTML = "Close Posts";
-    }
-    else if(PostIsDisplayed === true)
-    {
-        togglePostInfo.forEach(content => {
-            content.style.display = 'none';
-        });
-        PostIsDisplayed = false;
-        getPosts.innerHTML = "View Posts";
-    }
-        
-};
-
-function displayAlbumInfo()
-{
-    if(AlbumIsDisplayed === false)
-    {
-        toggleAlbumInfo.forEach(content => {
-            content.style.display = 'initial';
-        });
-        AlbumIsDisplayed = true;
-        getAlbums.innerHTML = "Close Albums";
-    }
-    else if(AlbumIsDisplayed === true)
-    {
-        toggleAlbumInfo.forEach(content => {
-            content.style.display = 'none';
-        });
-        AlbumIsDisplayed = false;
-        getAlbums.innerHTML = "View Albums";
-    }
-};
-
-function displayTodoInfo()
-{
-    if(TodoIsDisplayed === false)
-    {
-        toggleTodoInfo.forEach(content => {
-            content.style.display = 'initial';
-        });
-        TodoIsDisplayed = true;
-        getTodos.innerHTML = "Close Todos";
-    }
-    else if(TodoIsDisplayed === true)
-    {
-        toggleTodoInfo.forEach(content => {
-            content.style.display = 'none';
-        });
-        TodoIsDisplayed = false;
-        getTodos.innerHTML = "View Todos";
-    }
-};
-
 
 function hideAll()
 {
@@ -145,28 +89,26 @@ function hideAll()
         TodoIsDisplayed = false;
     }
 
+    //Empties arrays and divs
     userPosts = [];
     displayPosts.innerHTML = "";
-    getPosts.innerHTML = "View Posts";
 
     userAlbums = [];
     displayAlbums.innerHTML = "";
-    getAlbums.innerHTML = "View Albums";
 
     userTodos = [];
     displayTodos.innerHTML = "";
-    getTodos.innerHTML = "View Todos";
 };
 
 closeIcon.onclick = function()
 {
-    displayUserInfo();
+    UserIsDisplayed = displayInfo(UserIsDisplayed,toggleUserInfo);
     hideAll();
 };
 
 function showUser(name)
 {
-    displayUserInfo();
+    UserIsDisplayed = displayInfo(UserIsDisplayed,toggleUserInfo);
     hideAll();
 
     fetch('https://jsonplaceholder.typicode.com/users/?name=' + name)
@@ -175,6 +117,7 @@ function showUser(name)
     })
     .then(user => {
 
+        //Parses User Info
         var unparsed = JSON.stringify(user);
         var parsed = unparsed.split(",");
 
@@ -195,6 +138,7 @@ function showUser(name)
         var parsedId = id.split(":")[1];
         userId = parsedId;
 
+        //Sets User Info to be displayed 
         userInfo.username.innerHTML = "Username: " + parsedUsername;
         userInfo.email.innerHTML = "Email: " + parsedEmail;
         userInfo.name.innerHTML = parsedName;
@@ -202,7 +146,7 @@ function showUser(name)
     });
 };
 
-getUser.onclick = function()
+getUser.onclick = function() //Calls showUser method using input value as parameter
 {
     showUser(user.value.toString());
 };
@@ -211,6 +155,7 @@ getAllUsers.onclick = function()
 {
     if(toggleList === false)
     {
+        //Empties array and div
         allUsers = [];
         listAllUsers.innerHTML = "";
 
@@ -228,6 +173,8 @@ getAllUsers.onclick = function()
                 parsedUser = parsedUser.split(":")[1];
                 parsedUser = parsedUser.replaceAll('"', '');
 
+                 //Adds an unique id for each User in the User List, to be used by the replyClick method
+                 //when you click the User
                 allUsers.push("<p id='user" + i + "' onClick='replyClick(this.id)'>" + parsedUser + "</p>");
             }
             allUsers.forEach(user => listAllUsers.innerHTML += Object.values(user).join(""));
@@ -242,7 +189,7 @@ getAllUsers.onclick = function()
     }
 };
 
-function replyClick(clicked_id)
+function replyClick(clicked_id) //Calls showUser method using ids generated for the User List as a parameter
 {
     clickedUser = document.getElementById(clicked_id);
     clickedUser = clickedUser.innerHTML;
@@ -251,11 +198,12 @@ function replyClick(clicked_id)
 
 getPosts.onclick = function()
 {
-    displayPostInfo();
+    PostIsDisplayed = displayInfo(PostIsDisplayed,togglePostInfo);
 
     var post = '';
     var title = '';
 
+    //Empties array and div
     userPosts = [];
     displayPosts.innerHTML = "";
 
@@ -285,11 +233,12 @@ getPosts.onclick = function()
 
 getAlbums.onclick = function()
 {
-    displayAlbumInfo();
+    AlbumIsDisplayed = displayInfo(AlbumIsDisplayed,toggleAlbumInfo);
 
     var unparsedAlbum = '';
     var album = '';
 
+    //Empties array and div
     userAlbums = [];
     displayAlbums.innerHTML = "";
 
@@ -315,11 +264,12 @@ getAlbums.onclick = function()
 
 getTodos.onclick = function()
 {
-    displayTodoInfo();
+    TodoIsDisplayed = displayInfo(TodoIsDisplayed,toggleTodoInfo);
     var unparsedTodo = '';
     var todoTitle = '';
     var completed = '';
 
+    //Empties array and div
     userTodos = [];
     displayTodos.innerHTML = "";
 
