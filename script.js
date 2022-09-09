@@ -1,3 +1,4 @@
+const url = "https://jsonplaceholder.typicode.com/";            //API Url
 const user = document.getElementById("user");                   //Find User input
 const getUser = document.getElementById("get-user");            //Find User button
 const getAllUsers = document.getElementById("get-all-users");   //Displays User List when clicked
@@ -120,7 +121,7 @@ function showUser(name)
     UserIsDisplayed = displayInfo(UserIsDisplayed,toggleUserInfo);
     hideAll();
 
-    fetch('https://jsonplaceholder.typicode.com/users/?name=' + name)
+    fetch(url + 'users/?name=' + name)
     .then(response => {
         return response.json();
     })
@@ -146,7 +147,10 @@ function showUser(name)
 
 getUser.onclick = function() //Calls showUser method using input value as parameter
 {
-    showUser(user.value.toString());
+    if(user.value.toString())
+    {
+        showUser(user.value.toString());
+    }
 };
 
 function formatJson(JsonString, firstSplit, secondSplit)
@@ -169,7 +173,7 @@ getAllUsers.onclick = function()
         listAllUsers.innerHTML = "";
 
         var parsedUser = "";
-        fetch("https://jsonplaceholder.typicode.com/users")
+        fetch(url + "users")
         .then(response => {
             return response.json();
         })
@@ -217,7 +221,7 @@ getPosts.onclick = function()
     userPosts = [];
     displayPosts.innerHTML = "";
 
-    fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/posts")
+    fetch(url + "users/" + userId + "/posts")
     .then(response => {
         return response.json();
     })
@@ -246,7 +250,7 @@ getAlbums.onclick = function()
     userAlbums = [];
     displayAlbums.innerHTML = "";
 
-    fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/albums")
+    fetch(url + "users/" + userId + "/albums")
     .then(response => {
         return response.json();
     })
@@ -275,7 +279,7 @@ getTodos.onclick = function()
     userTodos = [];
     displayTodos.innerHTML = "";
 
-    fetch("https://jsonplaceholder.typicode.com/users/" + userId + "/todos")
+    fetch(url + "users/" + userId + "/todos")
     .then(response => {
         return response.json();
     })
